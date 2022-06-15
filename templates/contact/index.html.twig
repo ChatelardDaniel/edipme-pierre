@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{# Changer le title avec Contact #}
+{% block title %}Contact{% endblock %}
+
+{% block body %}
+
+    {# Ajouter le texte: #}
+    Contactez-nous !
+    {# Interpolation de form(formulaire) venant du fichier ContactController.php #}
+    {{ form(formulaire)}}
+
+{% endblock %}
