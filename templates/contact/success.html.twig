@@ -1,0 +1,12 @@
+{# templates/contact/sucess.html.twig #}
+{% extends 'base.html.twig' %}
+
+{# Changer le title avec Formulaire envoyé ! #}
+{% block title %}Formulaire envoyé !{% endblock %}
+
+{% block body %}
+
+    {# message avec interpolation du l’email #}
+    Formulaire envoyé avec l'adresse : {{ email }}
+
+{% endblock %}
