@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Video;
 use App\Form\VideoType;
 use App\Repository\VideoRepository;
+use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,13 +23,18 @@ class AdminVideoController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_video_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, VideoRepository $videoRepository): Response
+    public function new(Request $request, FileUploader $fileUploader, VideoRepository $videoRepository): Response
     {
         $video = new Video();
         $form = $this->createForm(VideoType::class, $video);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $imageFileName = $fileUploader->upload($imageFile);
+                $video->setImageFilename($imageFileName);
+            }
             $videoRepository->add($video, true);
 
             return $this->redirectToRoute('app_admin_video_index', [], Response::HTTP_SEE_OTHER);
@@ -49,12 +55,17 @@ class AdminVideoController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_video_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Video $video, VideoRepository $videoRepository): Response
+    public function edit(Request $request, FileUploader $fileUploader, Video $video, VideoRepository $videoRepository): Response
     {
         $form = $this->createForm(VideoType::class, $video);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $imageFileName = $fileUploader->upload($imageFile);
+                $video->setImageFilename($imageFileName);
+            }
             $videoRepository->add($video, true);
 
             return $this->redirectToRoute('app_admin_video_index', [], Response::HTTP_SEE_OTHER);
